@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Propagation Example</title>
+</head>
+<body>
+    <div id="parent">
+        Parent
+        <button id="child">Child</button>
+    </div>
+
+    <script>
+        document.getElementById('parent').addEventListener('click', () => {
+            alert('Parent clicked');
+        });
+
+        document.getElementById('child').addEventListener('click', (event) => {
+            alert('Child clicked');
+            event.stopImmediatePropagation(); // 阻止事件传播
+        });
+
+        document.getElementById('child').addEventListener('click', () => {
+            alert('Another child click handler');
+        });
+    </script>
+</body>
+</html>
