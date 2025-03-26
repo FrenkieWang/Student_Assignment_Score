@@ -1,4 +1,4 @@
-// 定义初始状态的二维数组，每个单元格包含值和背景颜色
+// Define the initial state of the 2D array, each cell contains a value and background color
 let initialDataArray = [
     [{value: 'Student Name'}, {value: 'Student ID'}, {value: 'Assignment 1'}, {value: 'Assignment 2'}, {value: 'Assignment 3'}, {value: 'Assignment 4'}, {value: 'Assignment 5'}, {value: 'Average [%]'}]
 ];
@@ -9,7 +9,7 @@ for (let i = 0; i < 10; i++) {
 
 let dataArray = JSON.parse(JSON.stringify(initialDataArray));
 
-// 获取表格元素和按钮
+// Get table element and buttons
 const table = document.getElementById('data-table');
 const deleteButton = document.getElementById('delete-button');
 const undeleteButton = document.getElementById('undelete-button');
@@ -23,7 +23,7 @@ let selectedCol = null;
 let lastDeleted = null;
 let averageTextState = 0;
 
-// 生成随机行数据
+// Generate random row data
 function generateRandomRow(columnCount) {
     const name = faker.name.findName();
     const id = faker.datatype.number({ min: 100000000, max: 999999999 }).toString();
@@ -32,7 +32,7 @@ function generateRandomRow(columnCount) {
     return [{ value: name }, { value: id }, ...assignments, { value: '' }];
 }
 
-// 计算平均分
+// Calculate the average score
 function calculateAverage(rowData) {
     const assignmentValues = rowData.slice(2, -1).map(cell => cell.value === '-' ? null : parseInt(cell.value)).filter(val => val !== null);
     if (assignmentValues.length === 0) {
@@ -50,7 +50,7 @@ function calculateAverage(rowData) {
     }
 }
 
-// 转换为字母成绩
+// Convert to letter grade
 function convertToLetterGrade(average) {
     if (average >= 93) return 'A';
     if (average >= 90) return 'A-';
@@ -66,7 +66,7 @@ function convertToLetterGrade(average) {
     return 'F';
 }
 
-// 转换为4.0成绩
+// Convert to 4.0 scale
 function convertTo4Scale(average) {
     if (average >= 93) return '4.0';
     if (average >= 90) return '3.7';
@@ -82,7 +82,7 @@ function convertTo4Scale(average) {
     return '0.0';
 }
 
-// 切换 Average 文本
+// Toggle Average Text
 function toggleAverageText() {
     const averageHeader = dataArray[0][dataArray[0].length - 1];
     if (averageTextState === 0) {
@@ -98,7 +98,7 @@ function toggleAverageText() {
     renderTable();
 }
 
-// 渲染表格
+// Render the table
 function renderTable() {
     table.innerHTML = '';
     dataArray.forEach((rowData, rowIndex) => {
@@ -145,8 +145,8 @@ function renderTable() {
                 cell.contentEditable = true;
                 cell.addEventListener('blur', (event) => {
                     if (preventBlur) {
-                        event.stopImmediatePropagation(); // 阻止 blur 事件
-                        preventBlur = false; // 重置标志
+                        event.stopImmediatePropagation(); // Prevent the blur event
+                        preventBlur = false; // Reset the flag
                         return;
                     }
                     const newValue = parseInt(cell.textContent);
@@ -167,7 +167,7 @@ function renderTable() {
                     }
                 });
             }
-            // 设置Student Name和Student ID列左对齐
+            // Set Student Name and Student ID columns to left align
             if (cellIndex === 0 || cellIndex === 1) {
                 cell.style.textAlign = 'left';
             }
@@ -176,10 +176,10 @@ function renderTable() {
         table.appendChild(row);
     });
     updateDeleteButtonState();
-    updateUnsubmittedAssignments(); // 更新未提交作业的个数
+    updateUnsubmittedAssignments(); // Update the count of unsubmitted assignments
 }
 
-// 计算原始平均分
+// Calculate the original average score
 function calculateOriginalAverage(rowData) {
     const assignmentValues = rowData.slice(2, -1).map(cell => cell.value === '-' ? null : parseInt(cell.value)).filter(val => val !== null);
     if (assignmentValues.length === 0) {
@@ -189,7 +189,7 @@ function calculateOriginalAverage(rowData) {
     return Math.round(sum / assignmentValues.length);
 }
 
-// 更新未提交的作业总数
+// Update the count of unsubmitted assignments
 function updateUnsubmittedAssignments() {
     let count = 0;
     dataArray.forEach((rowData, rowIndex) => {
@@ -204,7 +204,7 @@ function updateUnsubmittedAssignments() {
     unsubmittedCA.textContent = `Unsubmitted Assignments: ${count}`;
 }
 
-// 切换行选择
+// Toggle row selection
 function toggleRowSelection(row) {
     if (selectedCol !== null) {
         clearColSelection();
@@ -222,7 +222,7 @@ function toggleRowSelection(row) {
     updateDeleteButtonState();
 }
 
-// 切换列选择
+// Toggle column selection
 function toggleColSelection(colIndex) {
     if (selectedRow !== null) {
         selectedRow.classList.remove('selected-row');
@@ -249,7 +249,7 @@ function toggleColSelection(colIndex) {
     updateDeleteButtonState();
 }
 
-// 清除列选择
+// Clear column selection
 function clearColSelection() {
     Array.from(table.rows).forEach((row, rowIndex) => {
         row.cells[selectedCol].classList.remove('selected-col', 'selected-col-top', 'selected-col-bottom');
@@ -257,7 +257,7 @@ function clearColSelection() {
     selectedCol = null;
 }
 
-// 更新删除按钮状态
+// Update delete button state
 function updateDeleteButtonState() {
     if (selectedRow !== null || selectedCol !== null) {
         deleteButton.disabled = false;
@@ -266,7 +266,7 @@ function updateDeleteButtonState() {
     }
 }
 
-// 删除选中的行或列
+// Delete selected row or column
 deleteButton.addEventListener('click', () => {
     if (selectedRow !== null) {
         const rowIndex = Array.from(table.rows).indexOf(selectedRow);
@@ -278,7 +278,7 @@ deleteButton.addEventListener('click', () => {
         dataArray.forEach(row => {
             row.splice(selectedCol, 1);
         });
-        // 重新标号 Assignment 列
+        // Re-label Assignment columns
         dataArray[0].forEach((cell, index) => {
             if (cell.value.startsWith('Assignment')) {
                 cell.value = `Assignment ${index - 1}`;
@@ -291,7 +291,7 @@ deleteButton.addEventListener('click', () => {
     undeleteButton.disabled = false;
 });
 
-// 撤销删除
+// Undo delete
 undeleteButton.addEventListener('click', () => {
     if (lastDeleted !== null) {
         if (lastDeleted.type === 'row') {
@@ -303,7 +303,7 @@ undeleteButton.addEventListener('click', () => {
             dataArray.forEach((row, rowIndex) => {
                 row.splice(lastDeleted.index, 0, lastDeleted.data[rowIndex]);
             });
-            // 重新标号 Assignment 列
+            // Re-label Assignment columns
             dataArray[0].forEach((cell, index) => {
                 if (cell.value.startsWith('Assignment')) {
                     cell.value = `Assignment ${index - 1}`;
@@ -328,7 +328,7 @@ undeleteButton.addEventListener('click', () => {
     }
 });
 
-// 插入列
+// Insert column
 insertColumnButton.addEventListener('click', () => {
     const averageIndex = dataArray[0].length - 1;
     const assignmentCount = dataArray[0].filter(cell => cell.value.startsWith('Assignment')).length;
@@ -352,7 +352,7 @@ insertColumnButton.addEventListener('click', () => {
     updateDeleteButtonState();
 });
 
-// 插入行
+// Insert row
 insertRowButton.addEventListener('click', () => {
     const newRow = generateRandomRow(dataArray[0].length);
     dataArray.push(newRow);
@@ -363,9 +363,9 @@ insertRowButton.addEventListener('click', () => {
     updateDeleteButtonState();
 });
 
-// 恢复初始状态
+// Reset to initial state
 resetButton.addEventListener('click', () => {
-    dataArray = JSON.parse(JSON.stringify(savedDataArray)); // 恢复 到保存时的状态
+    dataArray = JSON.parse(JSON.stringify(savedDataArray)); // Restore to the saved state
     averageTextState = 0;
     dataArray[0][dataArray[0].length - 1].value = 'Average [%]';
     renderTable();
@@ -376,16 +376,16 @@ resetButton.addEventListener('click', () => {
     updateDeleteButtonState();
 });
 
-// 保存当前状态
+// Save current state
 saveButton.addEventListener('click', () => {
     savedDataArray = JSON.parse(JSON.stringify(dataArray));
     resetButton.disabled = false;
 });
 
-// 初始渲染表格
+// Initial render of the table
 renderTable();
 
-// 右键菜单功能
+// Right-click menu functionality
 const contextMenu = document.getElementById('context-menu');
 let targetCell = null;
 let preventBlur = false;
@@ -394,10 +394,10 @@ table.addEventListener('contextmenu', (event) => {
     event.preventDefault();
     targetCell = event.target;
 
-    // 检查单元格是否为 contentEditable
+    // Check if the cell is contentEditable
     if (targetCell.isContentEditable) {
-        preventBlur = true; // 设置标志以防止 blur 事件
-        targetCell.contentEditable = false; // 取消编辑状态
+        preventBlur = true; // Set flag to prevent blur event
+        targetCell.contentEditable = false; // Cancel editing state
     }
 
     const rowIndex = Array.from(targetCell.parentElement.parentElement.children).indexOf(targetCell.parentElement);
@@ -410,7 +410,7 @@ table.addEventListener('contextmenu', (event) => {
 
 document.addEventListener('click', () => {
     contextMenu.style.display = 'none';
-    preventBlur = false; // 重新启用 blur 事件
+    preventBlur = false; // Re-enable blur event
 });
 
 document.getElementById('insert-row-above').addEventListener('click', () => {

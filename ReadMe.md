@@ -2,6 +2,9 @@
 
 HTML/CSS/JS application
 
+The project is deployed at: 
+https://frenkiewang.github.io/Student_Assignment_Score/
+
 
 ### STEP 1:   Create Table Layout 
 1.  Create a table with 11 rows and 8 column.
